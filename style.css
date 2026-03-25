@@ -139,11 +139,6 @@ body {
     gap: 27px;
 }
 
-#Sleep\ hrs {
-    background-image: url('Sleep_hrs.png');
-    background-size: cover;
-    background-position: center;
-}
 
 #Gross\ Volume {
     background-image: url('Gross_volume.png');
