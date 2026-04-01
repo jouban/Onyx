@@ -3,61 +3,222 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Journal</title>
+  <title>FitPulse – Sleep</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <style>
 
-   .sidebar-logo {
-     width: 36px;
-     height: 36px;
-     background: #f0f0f5;
-     border: 1px solid #2a2a36;
-     border-radius: 8px;
-     display: flex;
-     align-items: center;
-     justify-content: center;
-   }
+    /* ── Grid layouts ─────────────────────────── */
+    .sleep-grid-top {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+    .sleep-grid-mid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 24px;
+    }
+    .sleep-grid-bot {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 40px;
+    }
 
-   .sidebar-logo span {
-     font-size: 16px;
-     font-weight: 700;
-     color: #111114;
-     letter-spacing: 1px;
-   }
+    .sleep-card {
+      background: #141418;
+      border: 1px solid #f0f0f5;
+      border-radius: 40px;
+      padding: 28px 30px;
+      transition: border-color 0.2s;
+    }
+    .sleep-card:hover { border-color: #2a2a36; }
 
-   .sidebar-top {
-     display: flex;
-     align-items: center;
-     gap: 8px;
-     margin-bottom: 10px;
-   }
+    /* ── Stat cards ─────────────────────────── */
+    .stat-icon {
+      width: 36px; height: 36px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 14px;
+    }
+    .stat-icon.purple { background: rgba(167,139,250,0.12); color: #a78bfa; }
+    .stat-icon.green  { background: rgba(52,211,153,0.12);  color: #34d399; }
+    .stat-icon.amber  { background: rgba(251,191,36,0.12);  color: #fbbf24; }
+    .stat-icon.red    { background: rgba(248,113,113,0.12); color: #f87171; }
+    .stat-value { font-size: 26px; font-weight: 700; color: #f0f0f5; letter-spacing: -1px; }
+    .stat-label { color: #666677; font-size: 13px; margin-top: 3px; }
+    .stat-delta { font-size: 12px; font-weight: 600; margin-top: 10px; display: inline-flex; align-items: center; gap: 4px; }
+    .stat-delta.up   { color: #34d399; }
+    .stat-delta.down { color: #f87171; }
 
-   .sidebar-brand {
-     font-size: 30px;
-     font-weight: 600;
-     color: #f0f0f5;
-     letter-spacing: 1px;
-   }
+    /* ── Card header ────────────────────────── */
+    .card-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; }
+    .card-title { font-size: 16px; font-weight: 700; color: #f0f0f5; letter-spacing: -0.3px; }
+    .card-sub   { color: #666677; font-size: 12px; margin-top: 3px; }
 
-   </style>
+    /* ── Pill ───────────────────────────────── */
+    .pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 12px; border-radius: 20px; font-size: 11px;
+      font-weight: 600; border: 1px solid #1e1e24;
+      background: #1a1a22; color: #888899;
+    }
+    .pill.green  { background: rgba(52,211,153,0.1);  border-color: rgba(52,211,153,0.2);  color: #34d399; }
+    .pill.purple { background: rgba(167,139,250,0.1); border-color: rgba(167,139,250,0.2); color: #a78bfa; }
 
+    /* ── Buttons ────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 9px 18px; border-radius: 14px; font-size: 13px;
+      font-weight: 600; cursor: pointer; border: none;
+      transition: all 0.18s; font-family: inherit;
+    }
+    .btn-primary { background: #f0f0f5; color: #111114; }
+    .btn-primary:hover { background: #d0d0e0; }
+    .btn-ghost { background: #1a1a22; color: #f0f0f5; border: 1px solid #1e1e24; }
+    .btn-ghost:hover { background: #222230; }
+
+    /* ── Header row (header + action buttons) ── */
+    .header-row {
+      display: flex; align-items: flex-end;
+      justify-content: space-between; gap: 16px;
+    }
+    .header-row .header { flex: 1; gap: 0; }
+    .header-actions { display: flex; gap: 10px; padding-bottom: 4px; }
+
+    /* ── Charts ─────────────────────────────── */
+    .chart-wrap  { position: relative; height: 190px; }
+    .trend-wrap  { position: relative; height: 150px; }
+    .cycle-wrap  { position: relative; height: 220px; }
+
+    /* ── Radial ring ────────────────────────── */
+    .radial-row  { display: flex; align-items: center; gap: 24px; }
+    .radial-ring { width: 110px; height: 110px; position: relative; flex-shrink: 0; }
+    .radial-ring svg { transform: rotate(-90deg); }
+    .ring-bg   { fill: none; stroke: #1e1e24; stroke-width: 10; }
+    .ring-fill {
+      fill: none; stroke: #a78bfa; stroke-width: 10; stroke-linecap: round;
+      stroke-dasharray: 283; stroke-dashoffset: 74;
+      transition: stroke-dashoffset 1.2s ease;
+    }
+    .radial-center {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%,-50%); text-align: center;
+    }
+    .radial-center span  { font-size: 22px; font-weight: 700; color: #f0f0f5; }
+    .radial-center small { display: block; color: #666677; font-size: 10px; }
+
+    /* ── Progress bars ──────────────────────── */
+    .prog-row   { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .prog-label { font-size: 12px; color: #666677; width: 78px; flex-shrink: 0; }
+    .prog-track { flex: 1; height: 5px; background: #1e1e24; border-radius: 99px; overflow: hidden; }
+    .prog-fill  { height: 100%; border-radius: 99px; }
+    .prog-val   { font-size: 12px; font-weight: 600; width: 32px; text-align: right; color: #888899; }
+
+    /* ── Calendar ───────────────────────────── */
+    .cal-top  { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .cal-top span { font-size: 13px; font-weight: 600; color: #f0f0f5; }
+    .cal-nav {
+      background: none; border: none; color: #666677; cursor: pointer;
+      padding: 4px; border-radius: 6px; display: flex; align-items: center;
+      transition: color 0.15s;
+    }
+    .cal-nav:hover { color: #f0f0f5; background: #1a1a22; }
+    .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; }
+    .cal-dname { text-align: center; color: #666677; font-size: 10px; font-weight: 600; padding: 4px 0; }
+    .cal-day {
+      text-align: center; padding: 5px 2px; border-radius: 8px;
+      font-size: 11px; color: #666677; cursor: pointer;
+      transition: all 0.12s; position: relative;
+    }
+    .cal-day:hover { background: #1a1a22; color: #f0f0f5; }
+    .cal-day.today { background: #1a1a22; color: #f0f0f5; font-weight: 700; border: 1px solid #2a2a36; }
+    .cal-day.selected { background: #f0f0f5; color: #111114; font-weight: 700; }
+    .cal-day.has-dot::after { content: ''; display: block; width: 3px; height: 3px; border-radius: 50%; margin: 1px auto 0; }
+    .cal-day.great::after { background: #34d399; }
+    .cal-day.good::after  { background: #a78bfa; }
+    .cal-day.poor::after  { background: #fbbf24; }
+    .cal-day.bad::after   { background: #f87171; }
+    .cal-legend { display: flex; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
+    .cal-legend-item { display: flex; align-items: center; gap: 4px; font-size: 11px; color: #666677; }
+    .cal-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+
+    /* ── Log form ───────────────────────────── */
+    .log-form { display: flex; flex-direction: column; gap: 14px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group label { font-size: 11px; font-weight: 600; color: #666677; text-transform: uppercase; letter-spacing: 0.5px; }
+    .form-group input {
+      background: #1a1a22; border: 1px solid #1e1e24; border-radius: 14px;
+      padding: 9px 14px; color: #f0f0f5; font-size: 13px; font-family: inherit;
+      outline: none; transition: border-color 0.15s; width: 100%;
+    }
+    .form-group input:focus { border-color: #2a2a36; }
+    .quality-row { display: flex; gap: 6px; }
+    .q-btn {
+      flex: 1; padding: 8px 4px; border-radius: 12px; border: 1px solid #1e1e24;
+      background: #1a1a22; color: #666677; font-size: 11px; font-weight: 600;
+      cursor: pointer; transition: all 0.15s; font-family: inherit; text-align: center;
+    }
+    .q-btn:hover { border-color: #2a2a36; color: #f0f0f5; }
+    .q-btn.sel-great { background: rgba(52,211,153,0.1);  border-color: #34d399; color: #34d399; }
+    .q-btn.sel-good  { background: rgba(167,139,250,0.1); border-color: #a78bfa; color: #a78bfa; }
+    .q-btn.sel-poor  { background: rgba(251,191,36,0.1);  border-color: #fbbf24; color: #fbbf24; }
+    .q-btn.sel-bad   { background: rgba(248,113,113,0.1); border-color: #f87171; color: #f87171; }
+
+    /* ── Insights ───────────────────────────── */
+    .insight-list { display: flex; flex-direction: column; gap: 10px; }
+    .insight { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; border-radius: 18px; background: #1a1a22; border: 1px solid #1e1e24; }
+    .ins-icon { width: 28px; height: 28px; border-radius: 9px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+    .ins-icon.purple { background: rgba(167,139,250,0.12); color: #a78bfa; }
+    .ins-icon.green  { background: rgba(52,211,153,0.12);  color: #34d399; }
+    .ins-icon.amber  { background: rgba(251,191,36,0.12);  color: #fbbf24; }
+    .ins-title { font-size: 12px; font-weight: 700; color: #f0f0f5; margin-bottom: 2px; }
+    .ins-text  { font-size: 11px; color: #666677; line-height: 1.5; }
+
+    /* ── Improve banner ─────────────────────── */
+    .improve-banner { margin-top: 14px; padding: 12px 16px; background: #1a1a22; border: 1px solid #1e1e24; border-radius: 18px; }
+    .improve-banner .ilabel { font-size: 10px; font-weight: 600; color: #666677; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 3px; }
+    .improve-banner .ival   { font-size: 13px; font-weight: 600; color: #f0f0f5; }
+    .improve-banner .isub   { font-size: 11px; color: #666677; margin-top: 1px; }
+
+    /* ── Modal ──────────────────────────────── */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(8px); z-index: 200;
+      display: none; align-items: center; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal { background: #141418; border: 1px solid #f0f0f5; border-radius: 40px; padding: 32px; width: 580px; max-width: 95vw; }
+    .modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
+    .modal-title { font-size: 18px; font-weight: 700; letter-spacing: -0.5px; }
+    .modal-sub   { color: #666677; font-size: 12px; margin-top: 3px; }
+    .modal-close { background: #1a1a22; border: 1px solid #1e1e24; border-radius: 12px; color: #666677; cursor: pointer; padding: 6px; display: flex; align-items: center; transition: color 0.15s; }
+    .modal-close:hover { color: #f0f0f5; }
+    .cycle-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-top: 20px; }
+    .cycle-stat  { background: #1a1a22; border: 1px solid #1e1e24; border-radius: 18px; padding: 14px 16px; text-align: center; }
+    .cycle-stat-val   { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
+    .cycle-stat-label { font-size: 11px; color: #666677; margin-top: 3px; }
+    .cycle-legend { display: flex; gap: 14px; margin-top: 14px; flex-wrap: wrap; }
+    .cycle-legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #666677; }
+    .leg-dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+
+    /* ── Scrollbar ──────────────────────────── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-thumb { background: #1e1e24; border-radius: 99px; }
+
+  </style>
 </head>
 <body>
 
 <aside class="sidebar">
-  <!-- logo mark -->
   <div class="sidebar-top">
-    <div class="sidebar-logo">
-    <span>FP</span>
-    </div>
+    <div class="sidebar-logo"><span>FP</span></div>
     <span class="sidebar-brand">FitPulse</span>
   </div>
-
-  <!-- Search bar -->
   <div class="sidebar-search"></div>
-
-  <!-- Nav links -->
   <nav class="sidebar-nav">
     <a href="index.html"><div class="nav-item"><i data-lucide="layout-dashboard"></i>Dashboard</div></a>
     <a href="Sleep.html"><div class="nav-item active"><i data-lucide="moon"></i>Sleep</div></a>
@@ -65,16 +226,377 @@
     <a href="Workouts.html"><div class="nav-item"><i data-lucide="dumbbell"></i>Workouts</div></a>
     <a href="About.html"><div class="nav-item"><i data-lucide="info"></i>About</div></a>
   </nav>
-
 </aside>
-<!-- Main content -->
+
+<!-- ── Main ── -->
 <main class="main">
 
-  <div class="header">
-    <h1>Sleep</h1>
-    <p>Track your sleep and never miss on recovery</p>
+  <!-- Header + Buttons -->
+  <div class="header-row">
+    <div class="header">
+      <h1>Sleep</h1>
+      <p>Track your sleep and never miss on recovery</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-ghost" onclick="openModal()">
+        <i data-lucide="activity" style="width:14px;height:14px"></i> Sleep Cycles
+      </button>
+      <button class="btn btn-primary" onclick="focusLog()">
+        <i data-lucide="plus" style="width:14px;height:14px"></i> Log Sleep
+      </button>
+    </div>
   </div>
+
+  <!-- ── Stat Cards ── -->
+  <div class="sleep-grid-top">
+    <div class="sleep-card">
+      <div class="stat-icon purple"><i data-lucide="clock" style="width:17px;height:17px"></i></div>
+      <div class="stat-value">7h 42m</div>
+      <div class="stat-label">Avg. Sleep Duration</div>
+      <div class="stat-delta up"><i data-lucide="arrow-up" style="width:12px;height:12px"></i>+18 min vs last week</div>
+    </div>
+    <div class="sleep-card">
+      <div class="stat-icon green"><i data-lucide="zap" style="width:17px;height:17px"></i></div>
+      <div class="stat-value">84</div>
+      <div class="stat-label">Sleep Score</div>
+      <div class="stat-delta up"><i data-lucide="arrow-up" style="width:12px;height:12px"></i>+6 pts this week</div>
+    </div>
+    <div class="sleep-card">
+      <div class="stat-icon amber"><i data-lucide="repeat" style="width:17px;height:17px"></i></div>
+      <div class="stat-value">4.2</div>
+      <div class="stat-label">Avg. Sleep Cycles</div>
+      <div class="stat-delta down"><i data-lucide="arrow-down" style="width:12px;height:12px"></i>−0.3 vs last week</div>
+    </div>
+    <div class="sleep-card">
+      <div class="stat-icon red"><i data-lucide="heart" style="width:17px;height:17px"></i></div>
+      <div class="stat-value">58 bpm</div>
+      <div class="stat-label">Avg. Resting HR</div>
+      <div class="stat-delta up"><i data-lucide="arrow-up" style="width:12px;height:12px"></i>Optimal range</div>
+    </div>
+  </div>
+
+  <!-- ── Weekly Chart + Score & Calendar ── -->
+  <div class="sleep-grid-mid">
+
+    <div class="sleep-card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Weekly Sleep Duration</div>
+          <div class="card-sub">vs. 8h target · current week</div>
+        </div>
+        <span class="pill"><i data-lucide="calendar" style="width:11px;height:11px"></i> This Week</span>
+      </div>
+      <div class="chart-wrap"><canvas id="weeklyChart"></canvas></div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:24px;">
+
+      <!-- Sleep Score -->
+      <div class="sleep-card">
+        <div class="card-head" style="margin-bottom:14px;">
+          <div>
+            <div class="card-title">Sleep Score</div>
+            <div class="card-sub">Recovery quality index</div>
+          </div>
+          <span class="pill green">Great</span>
+        </div>
+        <div class="radial-row">
+          <div class="radial-ring">
+            <svg viewBox="0 0 110 110" width="110" height="110">
+              <circle class="ring-bg" cx="55" cy="55" r="45"/>
+              <circle class="ring-fill" cx="55" cy="55" r="45"/>
+            </svg>
+            <div class="radial-center">
+              <span>84</span><small>/100</small>
+            </div>
+          </div>
+          <div style="flex:1;">
+            <div class="prog-row">
+              <div class="prog-label">Deep Sleep</div>
+              <div class="prog-track"><div class="prog-fill" style="width:72%;background:#a78bfa"></div></div>
+              <div class="prog-val">72%</div>
+            </div>
+            <div class="prog-row">
+              <div class="prog-label">REM</div>
+              <div class="prog-track"><div class="prog-fill" style="width:22%;background:#34d399"></div></div>
+              <div class="prog-val">22%</div>
+            </div>
+            <div class="prog-row">
+              <div class="prog-label">Light</div>
+              <div class="prog-track"><div class="prog-fill" style="width:6%;background:#666677"></div></div>
+              <div class="prog-val">6%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Calendar -->
+      <div class="sleep-card">
+        <div class="card-head" style="margin-bottom:10px;">
+          <div class="card-title">Calendar</div>
+          <button class="btn btn-ghost" style="padding:5px 12px;font-size:11px;" onclick="openModal()">
+            <i data-lucide="activity" style="width:11px;height:11px"></i> Cycles
+          </button>
+        </div>
+        <div class="cal-top">
+          <button class="cal-nav" onclick="prevMonth()"><i data-lucide="chevron-left" style="width:14px;height:14px"></i></button>
+          <span id="calLabel">March 2026</span>
+          <button class="cal-nav" onclick="nextMonth()"><i data-lucide="chevron-right" style="width:14px;height:14px"></i></button>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+        <div class="cal-legend">
+          <div class="cal-legend-item"><span class="cal-dot" style="background:#34d399"></span>Great</div>
+          <div class="cal-legend-item"><span class="cal-dot" style="background:#a78bfa"></span>Good</div>
+          <div class="cal-legend-item"><span class="cal-dot" style="background:#fbbf24"></span>Fair</div>
+          <div class="cal-legend-item"><span class="cal-dot" style="background:#f87171"></span>Poor</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Log + Trend + Insights ── -->
+  <div class="sleep-grid-bot">
+
+    <!-- Log Sleep -->
+    <div class="sleep-card" id="logCard">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Log Tonight's Sleep</div>
+          <div class="card-sub">Track your recovery</div>
+        </div>
+        <i data-lucide="edit-3" style="width:15px;height:15px;color:#666677"></i>
+      </div>
+      <div class="log-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Bedtime</label>
+            <input type="time" value="23:00">
+          </div>
+          <div class="form-group">
+            <label>Wake Time</label>
+            <input type="time" value="07:00">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Sleep Quality</label>
+          <div class="quality-row">
+            <button class="q-btn" onclick="setQ(this,'great')">😴 Great</button>
+            <button class="q-btn sel-good" onclick="setQ(this,'good')">🙂 Good</button>
+            <button class="q-btn" onclick="setQ(this,'poor')">😐 Fair</button>
+            <button class="q-btn" onclick="setQ(this,'bad')">😩 Poor</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Notes (optional)</label>
+          <input type="text" placeholder="e.g. woke up at 3am, vivid dreams…">
+        </div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="saveSleep(this)">
+          <i data-lucide="save" style="width:14px;height:14px"></i> Save Sleep Log
+        </button>
+      </div>
+    </div>
+
+    <!-- 30-Day Trend -->
+    <div class="sleep-card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Sleep Quality Trend</div>
+          <div class="card-sub">30-day rolling view</div>
+        </div>
+        <span class="pill purple">Month</span>
+      </div>
+      <div class="trend-wrap"><canvas id="trendChart"></canvas></div>
+      <div class="improve-banner">
+        <div class="ilabel">Improvement</div>
+        <div class="ival">Sleep quality up <span style="color:#34d399">+14%</span> this month</div>
+        <div class="isub">Consistent bedtimes are driving the improvement</div>
+      </div>
+    </div>
+
+    <!-- AI Insights -->
+    <div class="sleep-card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">AI Insights</div>
+          <div class="card-sub">Personalised recommendations</div>
+        </div>
+        <span class="pill purple">✦ AI</span>
+      </div>
+      <div class="insight-list">
+        <div class="insight">
+          <div class="ins-icon green"><i data-lucide="coffee" style="width:13px;height:13px"></i></div>
+          <div><div class="ins-title">Caffeine Impact</div><div class="ins-text">You sleep 19% better when you stop caffeine by 2 PM.</div></div>
+        </div>
+        <div class="insight">
+          <div class="ins-icon purple"><i data-lucide="sunrise" style="width:13px;height:13px"></i></div>
+          <div><div class="ins-title">Wake Consistency</div><div class="ins-text">Consistent wake times lead to higher REM sleep cycles.</div></div>
+        </div>
+        <div class="insight">
+          <div class="ins-icon amber"><i data-lucide="thermometer" style="width:13px;height:13px"></i></div>
+          <div><div class="ins-title">Room Climate</div><div class="ins-text">Keeping your room at 18°C reduced your toss-and-turn rate by 32%.</div></div>
+        </div>
+        <div class="insight">
+          <div class="ins-icon purple"><i data-lucide="moon" style="width:13px;height:13px"></i></div>
+          <div><div class="ins-title">Bedtime Window</div><div class="ins-text">Going to bed 22:30–23:00 yields your deepest sleep.</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
 </main>
-<script>lucide.createIcons();</script>
+
+<!-- ── Sleep Cycles Modal ── -->
+<div class="modal-overlay" id="cycleModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title">Sleep Cycle Analysis</div>
+        <div class="modal-sub">Last night · 23:04 → 07:12</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">
+        <i data-lucide="x" style="width:16px;height:16px"></i>
+      </button>
+    </div>
+    <div class="cycle-wrap"><canvas id="cycleChart"></canvas></div>
+    <div class="cycle-legend">
+      <div class="cycle-legend-item"><span class="leg-dot" style="background:#a78bfa"></span>Deep Sleep</div>
+      <div class="cycle-legend-item"><span class="leg-dot" style="background:#34d399"></span>REM</div>
+      <div class="cycle-legend-item"><span class="leg-dot" style="background:#60a5fa"></span>Light Sleep</div>
+      <div class="cycle-legend-item"><span class="leg-dot" style="background:#444455"></span>Awake</div>
+    </div>
+    <div class="cycle-stats">
+      <div class="cycle-stat"><div class="cycle-stat-val" style="color:#a78bfa">4</div><div class="cycle-stat-label">Cycles completed</div></div>
+      <div class="cycle-stat"><div class="cycle-stat-val" style="color:#34d399">1h 48m</div><div class="cycle-stat-label">Deep sleep</div></div>
+      <div class="cycle-stat"><div class="cycle-stat-val" style="color:#fbbf24">1h 22m</div><div class="cycle-stat-label">REM sleep</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  lucide.createIcons();
+
+  /* ── Weekly Bar Chart ── */
+  const wCtx = document.getElementById('weeklyChart').getContext('2d');
+  const wGrad = wCtx.createLinearGradient(0,0,0,190);
+  wGrad.addColorStop(0,'rgba(167,139,250,0.85)');
+  wGrad.addColorStop(1,'rgba(124,58,237,0.2)');
+  new Chart(wCtx, {
+    type: 'bar',
+    data: {
+      labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+      datasets: [
+        { label: 'Sleep (hrs)', data: [7.2,6.5,8.1,7.8,7.0,8.5,9.0], backgroundColor: wGrad, borderRadius: 10, borderSkipped: false },
+        { label: 'Target', data: [8,8,8,8,8,8,8], type: 'line', borderColor: 'rgba(240,240,245,0.2)', borderDash: [4,4], borderWidth: 1.5, pointRadius: 0, fill: false }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: '#666677', font: { size: 11 } } },
+        y: { min:0, max:10, grid: { color: 'rgba(240,240,245,0.04)' }, ticks: { color:'#666677', font:{size:11}, callback: v => v+'h' } }
+      }
+    }
+  });
+
+  /* ── Trend Chart ── */
+  const tCtx = document.getElementById('trendChart').getContext('2d');
+  const tFill = tCtx.createLinearGradient(0,0,0,150);
+  tFill.addColorStop(0,'rgba(167,139,250,0.2)');
+  tFill.addColorStop(1,'rgba(167,139,250,0.0)');
+  new Chart(tCtx, {
+    type: 'line',
+    data: {
+      labels: Array.from({length:30},(_,i) => i===0?'1 Mar':i===14?'15 Mar':i===29?'Today':''),
+      datasets: [{ data: Array.from({length:30},(_,i)=>parseFloat((65+Math.sin(i/3)*8+i*0.5+Math.random()*4).toFixed(1))), borderColor:'#a78bfa', borderWidth:2, fill:true, backgroundColor:tFill, tension:0.4, pointRadius:0, pointHoverRadius:4, pointHoverBackgroundColor:'#a78bfa' }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid:{display:false}, ticks:{color:'#666677',font:{size:10}} },
+        y: { grid:{color:'rgba(240,240,245,0.04)'}, ticks:{color:'#666677',font:{size:10}} }
+      }
+    }
+  });
+
+  /* ── Cycle Chart ── */
+  let cycleInst = null;
+  function buildCycleChart() {
+    if (cycleInst) return;
+    const ctx = document.getElementById('cycleChart').getContext('2d');
+    const g = ctx.createLinearGradient(0,0,0,220);
+    g.addColorStop(0,'rgba(167,139,250,0.25)'); g.addColorStop(1,'rgba(167,139,250,0.0)');
+    cycleInst = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['23:00','23:30','00:00','00:30','01:00','01:30','02:00','02:30','03:00','03:30','04:00','04:30','05:00','05:30','06:00','06:30','07:00'],
+        datasets: [{ data:[3,1,1,1,2,3,1,1,2,3,1,2,3,2,3,3,4], borderColor:'#a78bfa', borderWidth:2.5, fill:true, backgroundColor:g, tension:0.3, pointRadius:3, pointBackgroundColor:'#a78bfa' }]
+      },
+      options: {
+        responsive:true, maintainAspectRatio:false,
+        plugins:{legend:{display:false}},
+        scales: {
+          x:{grid:{color:'rgba(240,240,245,0.04)'},ticks:{color:'#666677',font:{size:10}}},
+          y:{min:0.5,max:4.5,reverse:true,grid:{color:'rgba(240,240,245,0.04)'},ticks:{color:'#666677',font:{size:10},callback:v=>({1:'Deep',2:'REM',3:'Light',4:'Awake'}[v]||'')}}
+        }
+      }
+    });
+  }
+
+  /* ── Modal ── */
+  function openModal() {
+    document.getElementById('cycleModal').classList.add('open');
+    lucide.createIcons();
+    setTimeout(buildCycleChart, 60);
+  }
+  function closeModal() { document.getElementById('cycleModal').classList.remove('open'); }
+  document.getElementById('cycleModal').addEventListener('click', e => { if(e.target===e.currentTarget) closeModal(); });
+
+  /* ── Calendar ── */
+  let calDate = new Date(2026,2,1);
+  const sleepMap = {'2026-3-1':'great','2026-3-2':'good','2026-3-3':'great','2026-3-4':'good','2026-3-5':'poor','2026-3-6':'good','2026-3-7':'great','2026-3-8':'great','2026-3-9':'good','2026-3-10':'bad','2026-3-11':'good','2026-3-12':'great','2026-3-13':'good','2026-3-14':'great','2026-3-15':'poor','2026-3-16':'great','2026-3-17':'good','2026-3-18':'great','2026-3-19':'great','2026-3-20':'bad','2026-3-21':'good','2026-3-22':'great','2026-3-23':'good','2026-3-24':'great','2026-3-25':'good','2026-3-26':'great'};
+  const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+  function renderCal() {
+    document.getElementById('calLabel').textContent = `${MONTHS[calDate.getMonth()]} ${calDate.getFullYear()}`;
+    const grid = document.getElementById('calGrid'); grid.innerHTML='';
+    ['S','M','T','W','T','F','S'].forEach(d=>{const el=document.createElement('div');el.className='cal-dname';el.textContent=d;grid.appendChild(el);});
+    const first=new Date(calDate.getFullYear(),calDate.getMonth(),1).getDay();
+    const days=new Date(calDate.getFullYear(),calDate.getMonth()+1,0).getDate();
+    const today=new Date();
+    for(let i=0;i<first;i++) grid.appendChild(document.createElement('div'));
+    for(let d=1;d<=days;d++){
+      const el=document.createElement('div');el.className='cal-day';el.textContent=d;
+      const key=`${calDate.getFullYear()}-${calDate.getMonth()+1}-${d}`;
+      if(sleepMap[key]) el.classList.add('has-dot',sleepMap[key]);
+      if(d===today.getDate()&&calDate.getMonth()===today.getMonth()&&calDate.getFullYear()===today.getFullYear()) el.classList.add('today');
+      el.onclick=()=>{document.querySelectorAll('.cal-day.selected').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');};
+      grid.appendChild(el);
+    }
+  }
+  function prevMonth(){calDate.setMonth(calDate.getMonth()-1);renderCal();}
+  function nextMonth(){calDate.setMonth(calDate.getMonth()+1);renderCal();}
+  renderCal();
+
+  /* ── Quality picker ── */
+  function setQ(btn,q){document.querySelectorAll('.q-btn').forEach(b=>b.className='q-btn');btn.classList.add('sel-'+q);}
+
+  /* ── Focus log card ── */
+  function focusLog(){
+    const card=document.getElementById('logCard');
+    card.scrollIntoView({behavior:'smooth',block:'center'});
+    card.style.borderColor='#a78bfa';
+    setTimeout(()=>card.style.borderColor='',1400);
+  }
+
+  /* ── Save sleep ── */
+  function saveSleep(btn){
+    btn.innerHTML='✓ Saved!';btn.style.background='#34d399';btn.style.color='#111114';
+    setTimeout(()=>{btn.innerHTML='<i data-lucide="save" style="width:14px;height:14px"></i> Save Sleep Log';btn.style.background='';btn.style.color='';lucide.createIcons();},2000);
+  }
+</script>
 </body>
 </html>
