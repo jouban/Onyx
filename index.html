@@ -2,8 +2,11 @@
 <html lang="en">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
     <link rel="stylesheet" href="style.css">
+    <script src="index.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <body>
  <!-- sidebar shell -->
     <aside class="sidebar">
@@ -15,7 +18,22 @@
             <span class="sidebar-brand">FitPulse</span>
         </div>
        <!-- search bar -->
-        <div class="sidebar-search"></div>
+        <input type="checkbox" class="theme-checkbox" id="theme-toggle">
+        <div class="sidebar-tracker">
+            <!-- Pulse streak widget -->
+            <div class="streak-widget">
+                <div class="streak-icon">
+                    <i data-lucide="activity"></i>
+                </div>
+                <div class="streak-info">
+                    <span class="streak-label">PULSE STREAK</span>
+                    <div class="streak-value">
+                        <span class="streak-days" id="streak-val">0</span>
+                        <span class="streak-unit">DAYS</span>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- nav links -->
         <nav class="sidebar-nav">
             <a href="index.html"><div class="nav-item active"><i data-lucide="layout-dashboard"></i>Dashboard</div></a>
@@ -23,27 +41,89 @@
             <a href="AI-meals.html"><div class="nav-item"><i data-lucide="salad"></i>AI meals</div></a>
             <a href="Workouts.html"><div class="nav-item"><i data-lucide="dumbbell"></i>Workouts</div></a>
             <a href="About.html"><div class="nav-item"><i data-lucide="info"></i>About</div></a>
+            <!-- Theme button -->
         </nav>
+
  </aside>
  <!-- Main content wrapper -->
  <main class="main">
-        <div class="header"> 
-        <h1>Performance Monitor</h1>
+     <div class="header">
+            <h1>Performance Monitor</h1>
         <p>Holistic biological status and progression metrics</p>
         </div>
      <div class="sectors-row">
 
-             <div class="sector" id="Days num"></div>
-             <div class="sector" id="Calories"></div>
-             <div class="sector" id="Sleep hrs"></div>
-             <div class="sector" id="Gross Volume"></div>
+             <div class="sector" id="consistency">
+                 <div class="sector-icon"><i data-lucide="activity"></i></div>
+             <div class="sector-content">
+                 <span class="sector-label">Consistency</span>
+                 <div class="sector-value"><span id="consistency-val">0</span> <span class="sector-unit">Days</span></div>
+                 <span class="sector-sub">UNINTERRUPTED MOMENTUM</span>
+                 </div>
+                 </div>
+
+                 <div class="sector" id="Calories">
+                     <div class="sector-icon"><i data-lucide="flame"></i></div>
+                     <div class="sector-content">
+                         <span class="sector-label">Calories</span>
+                         <div class="sector-value"><span id="calories-val">0</span> <span class="sector-unit">Kcal</span></div>
+                     </div>
+                 </div>
+         
+         
+             <div class="sector" id="Sleep hrs">
+                 <div class="sector-icon"><i data-lucide="moon"></i></div>
+                 <div class="sector-content">
+                     <span class="sector-label">Sleep hrs</span>
+                     <div class="sector-value"><span id="sleep-val">0</span> <span class="sector-unit">Hrs</span></div>
+                     <span class="sector-sub">7-Day average recovery</span>
+                     </div>
+             </div>
+         
+         <div class="sector" id="Gross Volume">
+         <div class="sector-icon"><i data-lucide="weight"></i></div>
+         <div class="sector-content">
+             <span class="sector-label">Gross Volume</span>
+             <div class="sector-value"><span id="gross-val">0</span> <span class="sector-unit">Kg</span></div>
+             <span class="sector-sub">Cumulative load across all sets</span>
+         </div>
+     </div>
      </div>
 
      <!-- Bottom row -->
      <div class="bottom-row">
-         <div class="bottom-left"></div>
-         <div class="bottom-right"></div>
-     </div>
+         <div class="bottom-left">
+             <div class="chart-header">
+                 <span class="sector-label">FORCE-PRODUCTION INTENSITY</span>
+                 <span class="chart-tag">● VOLUME</span>
+                 </div>
+                 <div class="chart-wrapper">
+                     <canvas id="intensityChart"></canvas>
+             </div>
+         </div>
+
+         <div class="bottom-right">
+             <div class="water-icon">
+                 <i data-lucide="droplets"></i>
+             </div>
+             <div class="water-wrapper">
+                 <div class="sector-content">
+                     <span class="sector-label">HYDRATION INDEX</span>
+
+                     <!-- ONLY water-value, no sector-value -->
+                     <div class="water-value">
+                         <span id="water-val">0.00</span>
+                         <span class="sector-unit">L</span>
+                     </div>
+
+                     <div class="water-buttons">
+                         <button class="water-btn" onclick="addWater(250)">+ 250ML</button>
+                         <button class="water-btn" onclick="addWater(500)">+ 500ML</button>
+                     </div>
+                     <span class="sector-sub" style="text-align: center; display: block;">Maintain optimal fluid levels for peak muscle conductivity.</span>
+                 </div>
+             </div>
+         </div>
 
     </main>
  <script>lucide.createIcons();</script>
