@@ -8,18 +8,19 @@
   <link rel="stylesheet" href="style.css">
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
   <style>
 
     /* ── Grid layouts ─────────────────────────── */
     body {
       max-width: 100vw;
       overflow-x: hidden;
+      display: flex;
     }
     .main {
-      overflow-x: hidden;
+      overflow-x: clip;
       width: 100%;
       max-width: 100%;
+      float: left;
     }
     
     .sleep-grid-top {
@@ -32,6 +33,7 @@
       grid-template-columns: 1.5fr 1fr;
       gap: 24px;
       margin-bottom: 40px;
+      width: 100%;
     }
 
     .sleep-card {
@@ -51,7 +53,7 @@
     }
 
     .sidebar {
-      width: 22%;
+      width: 20%;
       /* prevent shrinking from tight spaces */
       min-width: 140px;
       height: 100vh;
@@ -61,6 +63,7 @@
       flex-direction: column;
       padding: 20px 12px;
       gap: 6px;
+      float: left;
     }
 
     .sidebar-logo {
@@ -298,7 +301,6 @@
 
 <!-- ── Main ── -->
 <main class="main">
-
   <!-- Header + Theme Toggle + Cycles Button -->
   <div class="header-row">
     <div class="header">
@@ -309,8 +311,6 @@
       <button class="btn btn-ghost" onclick="openModal()">
         <i data-lucide="activity" style="width:14px;height:14px"></i> Sleep Cycles
       </button>
-      <!-- Theme toggle — same as every other page -->
-      <input type="checkbox" class="theme-checkbox" id="theme-toggle">
     </div>
   </div>
 
@@ -398,7 +398,6 @@
           </div>
         </div>
       </div>
-
       <!-- Calendar -->
       <div class="sleep-card">
         <div class="card-head" style="margin-bottom:10px;">
@@ -420,7 +419,6 @@
           <div class="cal-legend-item"><span class="cal-dot" style="background:#f87171"></span>Poor</div>
         </div>
       </div>
-
     </div>
   </div>
 
@@ -523,7 +521,7 @@
   function renderCal() {
     document.getElementById('calLabel').textContent = `${MONTHS[calDate.getMonth()]} ${calDate.getFullYear()}`;
     const grid = document.getElementById('calGrid'); grid.innerHTML='';
-    ['S','M','T','W','T','F','S'].forEach(d=>{const el=document.createElement('div');el.className='cal-dname';el.textContent=d;grid.appendChild(el);});
+    ['S','M','T','W','T','F','S'].forEach(d=>{const el=document.createElement('div');el.className='cal-name';el.textContent=d;grid.appendChild(el);});
     const first=new Date(calDate.getFullYear(),calDate.getMonth(),1).getDay();
     const days=new Date(calDate.getFullYear(),calDate.getMonth()+1,0).getDate();
     const today=new Date();
