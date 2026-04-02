@@ -21,11 +21,6 @@
       display: grid;
       grid-template-columns: 1.5fr 1fr;
       gap: 24px;
-    }
-    .sleep-grid-bot {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 24px;
       margin-bottom: 40px;
     }
 
@@ -76,23 +71,20 @@
       font-weight: 600; cursor: pointer; border: none;
       transition: all 0.18s; font-family: inherit;
     }
-    .btn-primary { background: #f0f0f5; color: #111114; }
-    .btn-primary:hover { background: #d0d0e0; }
     .btn-ghost { background: #1a1a22; color: #f0f0f5; border: 1px solid #1e1e24; }
     .btn-ghost:hover { background: #222230; }
 
-    /* ── Header row (header + action buttons) ── */
+    /* ── Header row ─────────────────────────── */
     .header-row {
       display: flex; align-items: flex-end;
       justify-content: space-between; gap: 16px;
     }
     .header-row .header { flex: 1; gap: 0; }
-    .header-actions { display: flex; gap: 10px; padding-bottom: 4px; }
+    .header-actions { display: flex; gap: 10px; padding-bottom: 4px; align-items: center; }
 
     /* ── Charts ─────────────────────────────── */
-    .chart-wrap  { position: relative; height: 190px; }
-    .trend-wrap  { position: relative; height: 150px; }
-    .cycle-wrap  { position: relative; height: 220px; }
+    .chart-wrap { position: relative; height: 190px; }
+    .cycle-wrap { position: relative; height: 220px; }
 
     /* ── Radial ring ────────────────────────── */
     .radial-row  { display: flex; align-items: center; gap: 24px; }
@@ -146,45 +138,6 @@
     .cal-legend-item { display: flex; align-items: center; gap: 4px; font-size: 11px; color: #666677; }
     .cal-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
 
-    /* ── Log form ───────────────────────────── */
-    .log-form { display: flex; flex-direction: column; gap: 14px; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .form-group { display: flex; flex-direction: column; gap: 6px; }
-    .form-group label { font-size: 11px; font-weight: 600; color: #666677; text-transform: uppercase; letter-spacing: 0.5px; }
-    .form-group input {
-      background: #1a1a22; border: 1px solid #1e1e24; border-radius: 14px;
-      padding: 9px 14px; color: #f0f0f5; font-size: 13px; font-family: inherit;
-      outline: none; transition: border-color 0.15s; width: 100%;
-    }
-    .form-group input:focus { border-color: #2a2a36; }
-    .quality-row { display: flex; gap: 6px; }
-    .q-btn {
-      flex: 1; padding: 8px 4px; border-radius: 12px; border: 1px solid #1e1e24;
-      background: #1a1a22; color: #666677; font-size: 11px; font-weight: 600;
-      cursor: pointer; transition: all 0.15s; font-family: inherit; text-align: center;
-    }
-    .q-btn:hover { border-color: #2a2a36; color: #f0f0f5; }
-    .q-btn.sel-great { background: rgba(52,211,153,0.1);  border-color: #34d399; color: #34d399; }
-    .q-btn.sel-good  { background: rgba(167,139,250,0.1); border-color: #a78bfa; color: #a78bfa; }
-    .q-btn.sel-poor  { background: rgba(251,191,36,0.1);  border-color: #fbbf24; color: #fbbf24; }
-    .q-btn.sel-bad   { background: rgba(248,113,113,0.1); border-color: #f87171; color: #f87171; }
-
-    /* ── Insights ───────────────────────────── */
-    .insight-list { display: flex; flex-direction: column; gap: 10px; }
-    .insight { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; border-radius: 18px; background: #1a1a22; border: 1px solid #1e1e24; }
-    .ins-icon { width: 28px; height: 28px; border-radius: 9px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-    .ins-icon.purple { background: rgba(167,139,250,0.12); color: #a78bfa; }
-    .ins-icon.green  { background: rgba(52,211,153,0.12);  color: #34d399; }
-    .ins-icon.amber  { background: rgba(251,191,36,0.12);  color: #fbbf24; }
-    .ins-title { font-size: 12px; font-weight: 700; color: #f0f0f5; margin-bottom: 2px; }
-    .ins-text  { font-size: 11px; color: #666677; line-height: 1.5; }
-
-    /* ── Improve banner ─────────────────────── */
-    .improve-banner { margin-top: 14px; padding: 12px 16px; background: #1a1a22; border: 1px solid #1e1e24; border-radius: 18px; }
-    .improve-banner .ilabel { font-size: 10px; font-weight: 600; color: #666677; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 3px; }
-    .improve-banner .ival   { font-size: 13px; font-weight: 600; color: #f0f0f5; }
-    .improve-banner .isub   { font-size: 11px; color: #666677; margin-top: 1px; }
-
     /* ── Modal ──────────────────────────────── */
     .modal-overlay {
       position: fixed; inset: 0; background: rgba(0,0,0,0.75);
@@ -210,10 +163,67 @@
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-thumb { background: #1e1e24; border-radius: 99px; }
 
+    /* ── Theme toggle ───────────────────────── */
+    .theme-checkbox {
+      --toggle-size: 10px;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      width: 6.25em;
+      height: 3.125em;
+      background: linear-gradient(to right, #efefef 50%, #2a2a2a 50%) no-repeat;
+      background-size: 205%;
+      background-position: 0;
+      transition: 0.4s;
+      border-radius: 99em;
+      position: relative;
+      cursor: pointer;
+      font-size: var(--toggle-size);
+    }
+    .theme-checkbox::before {
+      content: "";
+      width: 2.25em;
+      height: 2.25em;
+      position: absolute;
+      top: 0.438em;
+      left: 0.438em;
+      background: linear-gradient(to right, #efefef 50%, #2a2a2a 50%) no-repeat;
+      background-size: 205%;
+      background-position: 100%;
+      border-radius: 50%;
+      transition: 0.4s;
+    }
+    .theme-checkbox:checked::before {
+      left: calc(100% - 2.25em - 0.438em);
+      background-position: 0;
+    }
+    .theme-checkbox:checked { background-position: 100%; }
+
+    /* ── Light mode overrides ───────────────── */
+    body.light { background: #f5f5fa; color: #111114; }
+    body.light .sidebar { background: #f0f0f5; border-color: #dddde8; }
+    body.light .sidebar-brand { color: #111114; }
+    body.light .nav-item { color: #888899; }
+    body.light .nav-item:hover, body.light .nav-item.active { background: #e0e0ea; color: #111114; }
+    body.light .sleep-card { background: #ffffff; border-color: #dddde8; }
+    body.light .card-title { color: #111114; }
+    body.light .stat-value { color: #111114; }
+    body.light .pill { background: #e8e8f0; border-color: #dddde8; color: #555566; }
+    body.light .btn-ghost { background: #e8e8f0; color: #111114; border-color: #dddde8; }
+    body.light .ring-bg { stroke: #dddde8; }
+    body.light .prog-track { background: #e0e0ea; }
+    body.light .cal-day:hover { background: #e8e8f0; color: #111114; }
+    body.light .cal-day.today { background: #e0e0ea; color: #111114; border-color: #c0c0cc; }
+    body.light .cal-day.selected { background: #111114; color: #f0f0f5; }
+    body.light .modal { background: #ffffff; border-color: #dddde8; }
+    body.light .cycle-stat { background: #f0f0f5; border-color: #dddde8; }
+    body.light .modal-close { background: #f0f0f5; border-color: #dddde8; }
+
   </style>
 </head>
 <body>
 
+<!-- ── Sidebar ── -->
 <aside class="sidebar">
   <div class="sidebar-top">
     <div class="sidebar-logo"><span>FP</span></div>
@@ -232,7 +242,7 @@
 <!-- ── Main ── -->
 <main class="main">
 
-  <!-- Header + Buttons -->
+  <!-- Header + Theme Toggle + Cycles Button -->
   <div class="header-row">
     <div class="header">
       <h1>Sleep</h1>
@@ -242,9 +252,8 @@
       <button class="btn btn-ghost" onclick="openModal()">
         <i data-lucide="activity" style="width:14px;height:14px"></i> Sleep Cycles
       </button>
-      <button class="btn btn-primary" onclick="focusLog()">
-        <i data-lucide="plus" style="width:14px;height:14px"></i> Log Sleep
-      </button>
+      <!-- Theme toggle — same as every other page -->
+      <input type="checkbox" class="theme-checkbox" id="theme-toggle">
     </div>
   </div>
 
@@ -279,6 +288,7 @@
   <!-- ── Weekly Chart + Score & Calendar ── -->
   <div class="sleep-grid-mid">
 
+    <!-- Weekly Bar Chart -->
     <div class="sleep-card">
       <div class="card-head">
         <div>
@@ -290,6 +300,7 @@
       <div class="chart-wrap"><canvas id="weeklyChart"></canvas></div>
     </div>
 
+    <!-- Right column: Score + Calendar -->
     <div style="display:flex;flex-direction:column;gap:24px;">
 
       <!-- Sleep Score -->
@@ -356,96 +367,6 @@
     </div>
   </div>
 
-  <!-- ── Log + Trend + Insights ── -->
-  <div class="sleep-grid-bot">
-
-    <!-- Log Sleep -->
-    <div class="sleep-card" id="logCard">
-      <div class="card-head">
-        <div>
-          <div class="card-title">Log Tonight's Sleep</div>
-          <div class="card-sub">Track your recovery</div>
-        </div>
-        <i data-lucide="edit-3" style="width:15px;height:15px;color:#666677"></i>
-      </div>
-      <div class="log-form">
-        <div class="form-row">
-          <div class="form-group">
-            <label>Bedtime</label>
-            <input type="time" value="23:00">
-          </div>
-          <div class="form-group">
-            <label>Wake Time</label>
-            <input type="time" value="07:00">
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Sleep Quality</label>
-          <div class="quality-row">
-            <button class="q-btn" onclick="setQ(this,'great')">😴 Great</button>
-            <button class="q-btn sel-good" onclick="setQ(this,'good')">🙂 Good</button>
-            <button class="q-btn" onclick="setQ(this,'poor')">😐 Fair</button>
-            <button class="q-btn" onclick="setQ(this,'bad')">😩 Poor</button>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Notes (optional)</label>
-          <input type="text" placeholder="e.g. woke up at 3am, vivid dreams…">
-        </div>
-        <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="saveSleep(this)">
-          <i data-lucide="save" style="width:14px;height:14px"></i> Save Sleep Log
-        </button>
-      </div>
-    </div>
-
-    <!-- 30-Day Trend -->
-    <div class="sleep-card">
-      <div class="card-head">
-        <div>
-          <div class="card-title">Sleep Quality Trend</div>
-          <div class="card-sub">30-day rolling view</div>
-        </div>
-        <span class="pill purple">Month</span>
-      </div>
-      <div class="trend-wrap"><canvas id="trendChart"></canvas></div>
-      <div class="improve-banner">
-        <div class="ilabel">Improvement</div>
-        <div class="ival">Sleep quality up <span style="color:#34d399">+14%</span> this month</div>
-        <div class="isub">Consistent bedtimes are driving the improvement</div>
-      </div>
-    </div>
-
-    <!-- AI Insights -->
-    <div class="sleep-card">
-      <div class="card-head">
-        <div>
-          <div class="card-title">AI Insights</div>
-          <div class="card-sub">Personalised recommendations</div>
-        </div>
-        <span class="pill purple">✦ AI</span>
-      </div>
-      <div class="insight-list">
-        <div class="insight">
-          <div class="ins-icon green"><i data-lucide="coffee" style="width:13px;height:13px"></i></div>
-          <div><div class="ins-title">Caffeine Impact</div><div class="ins-text">You sleep 19% better when you stop caffeine by 2 PM.</div></div>
-        </div>
-        <div class="insight">
-          <div class="ins-icon purple"><i data-lucide="sunrise" style="width:13px;height:13px"></i></div>
-          <div><div class="ins-title">Wake Consistency</div><div class="ins-text">Consistent wake times lead to higher REM sleep cycles.</div></div>
-        </div>
-        <div class="insight">
-          <div class="ins-icon amber"><i data-lucide="thermometer" style="width:13px;height:13px"></i></div>
-          <div><div class="ins-title">Room Climate</div><div class="ins-text">Keeping your room at 18°C reduced your toss-and-turn rate by 32%.</div></div>
-        </div>
-        <div class="insight">
-          <div class="ins-icon purple"><i data-lucide="moon" style="width:13px;height:13px"></i></div>
-          <div><div class="ins-title">Bedtime Window</div><div class="ins-text">Going to bed 22:30–23:00 yields your deepest sleep.</div></div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
 </main>
 
 <!-- ── Sleep Cycles Modal ── -->
@@ -483,7 +404,8 @@
   const wGrad = wCtx.createLinearGradient(0,0,0,190);
   wGrad.addColorStop(0,'rgba(167,139,250,0.85)');
   wGrad.addColorStop(1,'rgba(124,58,237,0.2)');
-  new Chart(wCtx, {
+
+  const weeklyChart = new Chart(wCtx, {
     type: 'bar',
     data: {
       labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
@@ -502,34 +424,14 @@
     }
   });
 
-  /* ── Trend Chart ── */
-  const tCtx = document.getElementById('trendChart').getContext('2d');
-  const tFill = tCtx.createLinearGradient(0,0,0,150);
-  tFill.addColorStop(0,'rgba(167,139,250,0.2)');
-  tFill.addColorStop(1,'rgba(167,139,250,0.0)');
-  new Chart(tCtx, {
-    type: 'line',
-    data: {
-      labels: Array.from({length:30},(_,i) => i===0?'1 Mar':i===14?'15 Mar':i===29?'Today':''),
-      datasets: [{ data: Array.from({length:30},(_,i)=>parseFloat((65+Math.sin(i/3)*8+i*0.5+Math.random()*4).toFixed(1))), borderColor:'#a78bfa', borderWidth:2, fill:true, backgroundColor:tFill, tension:0.4, pointRadius:0, pointHoverRadius:4, pointHoverBackgroundColor:'#a78bfa' }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { grid:{display:false}, ticks:{color:'#666677',font:{size:10}} },
-        y: { grid:{color:'rgba(240,240,245,0.04)'}, ticks:{color:'#666677',font:{size:10}} }
-      }
-    }
-  });
-
   /* ── Cycle Chart ── */
   let cycleInst = null;
   function buildCycleChart() {
     if (cycleInst) return;
     const ctx = document.getElementById('cycleChart').getContext('2d');
     const g = ctx.createLinearGradient(0,0,0,220);
-    g.addColorStop(0,'rgba(167,139,250,0.25)'); g.addColorStop(1,'rgba(167,139,250,0.0)');
+    g.addColorStop(0,'rgba(167,139,250,0.25)');
+    g.addColorStop(1,'rgba(167,139,250,0.0)');
     cycleInst = new Chart(ctx, {
       type: 'line',
       data: {
@@ -582,21 +484,48 @@
   function nextMonth(){calDate.setMonth(calDate.getMonth()+1);renderCal();}
   renderCal();
 
-  /* ── Quality picker ── */
-  function setQ(btn,q){document.querySelectorAll('.q-btn').forEach(b=>b.className='q-btn');btn.classList.add('sel-'+q);}
+  const themeToggle = document.getElementById('theme-toggle');
+  if (themeToggle) {
+    // Read saved theme from localStorage (same key as other pages)
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+      themeToggle.checked = true;
+      document.body.classList.add('light');
+      document.body.classList.remove('dark');
+    } else {
+      themeToggle.checked = false;
+      document.body.classList.add('dark');
+      document.body.classList.remove('light');
+    }
 
-  /* ── Focus log card ── */
-  function focusLog(){
-    const card=document.getElementById('logCard');
-    card.scrollIntoView({behavior:'smooth',block:'center'});
-    card.style.borderColor='#a78bfa';
-    setTimeout(()=>card.style.borderColor='',1400);
-  }
+    themeToggle.addEventListener('change', function() {
+      if (this.checked) {
+        // Switch to light mode
+        document.body.classList.remove('dark');
+        document.body.classList.add('light');
+        localStorage.setItem('theme', 'light');
 
-  /* ── Save sleep ── */
-  function saveSleep(btn){
-    btn.innerHTML='✓ Saved!';btn.style.background='#34d399';btn.style.color='#111114';
-    setTimeout(()=>{btn.innerHTML='<i data-lucide="save" style="width:14px;height:14px"></i> Save Sleep Log';btn.style.background='';btn.style.color='';lucide.createIcons();},2000);
+        // Update weeklyChart colors for light mode
+        weeklyChart.options.scales.x.ticks.color = '#111114';
+        weeklyChart.options.scales.y.ticks.color = '#111114';
+        weeklyChart.options.scales.x.grid.color = 'rgba(0,0,0,0.06)';
+        weeklyChart.options.scales.y.grid.color = 'rgba(0,0,0,0.06)';
+        weeklyChart.update();
+
+      } else {
+        // Switch to dark mode
+        document.body.classList.remove('light');
+        document.body.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+
+        // Update weeklyChart colors for dark mode
+        weeklyChart.options.scales.x.ticks.color = '#666677';
+        weeklyChart.options.scales.y.ticks.color = '#666677';
+        weeklyChart.options.scales.x.grid.color = 'rgba(240,240,245,0.04)';
+        weeklyChart.options.scales.y.grid.color = 'rgba(240,240,245,0.04)';
+        weeklyChart.update();
+      }
+    });
   }
 </script>
 </body>
