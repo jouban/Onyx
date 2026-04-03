@@ -4,45 +4,114 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Workouts</title>
+  <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="Workouts.css">
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="Workouts.js"></script>
 </head>
 <body>
 
 <aside class="sidebar">
-  <!-- logo mark -->
   <div class="sidebar-top">
     <div class="sidebar-logo">
-    <span>FP</span>
+      <span>FP</span>
     </div>
     <span class="sidebar-brand">FitPulse</span>
   </div>
-
-  <!-- Search bar -->
-  <div class="sidebar-search"></div>
-
-  <!-- Nav links -->
+  
   <nav class="sidebar-nav">
     <a href="index.html"><div class="nav-item"><i data-lucide="layout-dashboard"></i>Dashboard</div></a>
     <a href="Sleep.html"><div class="nav-item"><i data-lucide="moon"></i>Sleep</div></a>
     <a href="AI-meals.html"><div class="nav-item"><i data-lucide="salad"></i>AI meals</div></a>
     <a href="Workouts.html"><div class="nav-item active"><i data-lucide="dumbbell"></i>Workouts</div></a>
     <a href="About.html"><div class="nav-item"><i data-lucide="info"></i>About</div></a>
+    <input type="checkbox" style="margin-top: -280px; margin-left: -1500px" class="theme-checkbox" id="theme-toggle">
   </nav>
-
 </aside>
-<!-- Main content -->
+
 <main class="main">
 
   <div class="header">
     <h1>Workouts</h1>
-    <p>Log your workouts with intesity and volume</p>
-    <input type="checkbox" class="theme-checkbox" id="theme-toggle">
+    <p style="margin-top: 10px">Log your workouts with intensity and volume</p>
   </div>
+
+  <!-- Logger card -->
+  <div class="workout-logger">
+    <div class="logger-header">
+      <span class="sector-label">LOG WORKOUT</span>
+    </div>
+    <div class="logger-form">
+
+      <!-- Exercise name -->
+      <div class="form-group">
+        <label class="form-label">Exercise</label>
+        <input type="text" class="form-input" id="exercise-name" placeholder="e.g. Bench Press">
+      </div>
+
+      <!-- Sets and Reps -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Sets</label>
+          <input type="number" class="form-input" id="exercise-sets" placeholder="0" min="0">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Reps</label>
+          <input type="number" class="form-input" id="exercise-reps" placeholder="0" min="0">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Weight (Kg)</label>
+          <input type="number" class="form-input" id="exercise-weight" placeholder="0" min="0">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Duration (min)</label>
+          <input type="number" class="form-input" id="exercise-duration" placeholder="0" min="0">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Calories (Kcal)</label>
+          <input type="number" class="form-input" id="exercise-calories" placeholder="0" min="0">
+        </div>
+      </div>
+
+      <!-- Log button -->
+      <button class="log-btn" onclick="logWorkout()">
+        <i data-lucide="plus"></i>
+        Log Workout
+      </button>
+
+    </div>
+  </div>
+
+  <!-- Bottom row — chart + history -->
+  <div class="workout-bottom">
+
+    <!-- Chart card -->
+    <div class="workout-chart-card">
+      <div class="chart-header">
+        <span class="sector-label">WORKOUT VOLUME HISTORY</span>
+        <span class="chart-tag">● VOLUME</span>
+      </div>
+      <div class="chart-wrapper">
+        <canvas id="workoutChart"></canvas>
+      </div>
+    </div>
+
+    <!-- History list card -->
+    <div class="workout-history-card">
+      <div class="history-header">
+        <span class="sector-label">WORKOUT LOG</span>
+        <button class="clear-btn" onclick="clearHistory()">Clear</button>
+      </div>
+      <div class="history-list" id="history-list">
+        <span class="history-empty">No workouts logged yet.</span>
+      </div>
+    </div>
+
   </div>
 
 </main>
+
 <script>lucide.createIcons();</script>
 </body>
 </html>

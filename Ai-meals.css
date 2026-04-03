@@ -303,3 +303,11 @@ body.light .about-includes {
 body.light .about-conclusion {
     color: #888899;
 }
+
+.sidebar-brand {
+    font-weight: 600;
+    background: linear-gradient(135deg, #f0f0f5 0%, #8c71ff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}

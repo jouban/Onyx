@@ -224,7 +224,7 @@
 
     /* ── Theme toggle ───────────────────────── */
     .theme-checkbox {
-      --toggle-size: 10px;
+      --toggle-size: 6px;
       -webkit-appearance: none;
       -moz-appearance: none;
       appearance: none;
@@ -278,6 +278,15 @@
     body.light .cycle-stat { background: #f0f0f5; border-color: #dddde8; }
     body.light .modal-close { background: #f0f0f5; border-color: #dddde8; }
 
+
+    .sidebar-brand {
+      font-weight: 600;
+      background: linear-gradient(135deg, #f0f0f5 0%, #8c71ff 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
   </style>
 </head>
 <body>
@@ -288,14 +297,13 @@
     <div class="sidebar-logo"><span>FP</span></div>
     <span class="sidebar-brand">FitPulse</span>
   </div>
-  <div class="sidebar-search"></div>
-  <input type="checkbox" style="margin-top: 5px; margin-left: -7px" class="theme-checkbox" id="theme-toggle">
   <nav class="sidebar-nav">
     <a href="index.html"><div class="nav-item"><i data-lucide="layout-dashboard"></i>Dashboard</div></a>
     <a href="Sleep.html"><div class="nav-item active"><i data-lucide="moon"></i>Sleep</div></a>
     <a href="AI-meals.html"><div class="nav-item"><i data-lucide="salad"></i>AI meals</div></a>
     <a href="Workouts.html"><div class="nav-item"><i data-lucide="dumbbell"></i>Workouts</div></a>
     <a href="About.html"><div class="nav-item"><i data-lucide="info"></i>About</div></a>
+    <input type="checkbox" style="margin-top: -280px; margin-left: -1500px" class="theme-checkbox" id="theme-toggle">
   </nav>
 </aside>
 
@@ -305,7 +313,7 @@
   <div class="header-row">
     <div class="header">
       <h1>Sleep</h1>
-      <p>Track your sleep and never miss on recovery</p>
+      <p style="margin-top: 10px"> Track your sleep and never miss on recovery</p>
     </div>
     <div class="header-actions">
       <button class="btn btn-ghost" onclick="openModal()">

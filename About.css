@@ -52,20 +52,14 @@ body {
 }
 
 .sidebar-brand {
-    font-size: 30px;
     font-weight: 600;
-    color: #f0f0f5;
-    letter-spacing: 1px;
+    background: linear-gradient(135deg, #f0f0f5 0%, #8c71ff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 
-.sidebar-search {
-    width: 90%;
-    height: 100px;
-    background: #1e1e20;
-    border: 1px solid #1e1e24;
-    border-radius: 10px;
-    margin-bottom: 5px;
-}
+
 
 .sidebar-nav {
     width: 90%;
@@ -361,3 +355,4 @@ body.light .about-conclusion {
     line-height: 1.8;
     font-style: italic;
 }
+
