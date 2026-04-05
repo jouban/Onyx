@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-// THEME TOGGLE CODE (ADD THIS INSIDE)
+// THEME TOGGLE CODE 
     const themeToggle = document.getElementById('theme-toggle');
 
     if (themeToggle) {

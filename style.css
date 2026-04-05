@@ -43,6 +43,10 @@ body {
     font-weight: 600;
     color: #f0f0f5;
     letter-spacing: 1px;
+    background: linear-gradient(135deg, #f0f0f5 0%, #8c71ff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 @media (max-width: 1200px) {
     .sleep-grid-mid {
@@ -127,7 +131,7 @@ body {
 .streak-label {
     font-size: 17px;
     font-weight: 700;
-    color: #BEBEBE;    
+    color: #BEBEBE;
     letter-spacing: 1px;
     margin-left: 90px;
     margin-top: -55px;
@@ -277,7 +281,7 @@ body {
     font-size: 15px;
     font-weight: 700;
     letter-spacing: 1.5px;
-    color: #BEBEBE;   
+    color: #BEBEBE;
 }
 
 .sector-value {
@@ -293,7 +297,7 @@ body {
     position: relative;
     margin-left: 10px;
     font-size: 14px;
-    color: #BEBEBE;    
+    color: #BEBEBE;
     letter-spacing: 0px;
     text-transform: uppercase;
 }
@@ -489,8 +493,8 @@ body.light {
 
 /* Sidebar */
 body.light .sidebar {
-    background: #ffffff;
-    border-right-color: #e0e0e6;
+    background: #f0f0f5;
+    border-right-color: #dddde8;
 }
 
 /* Logo area (stays the same except background if needed) */
@@ -638,7 +642,7 @@ body.light .streak-icon {
 }
 
 body.light .streak-label {
-    color: #303234;   
+    color: #303234;
 }
 
 body.light .streak-days {
@@ -646,12 +650,19 @@ body.light .streak-days {
 }
 
 body.light .streak-unit {
-    color: #111114;    
+    color: #111114;
 }
 
 .sidebar-brand {
     font-weight: 600;
     background: linear-gradient(135deg, #f0f0f5 0%, #8c71ff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+body.light .sidebar-brand {
+    background: linear-gradient(135deg, #111114 0%, #8c71ff 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;

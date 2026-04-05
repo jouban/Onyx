@@ -4,101 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>About</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="About.css">
   <script src="https://unpkg.com/lucide@latest"></script>
-  <style>
-
-    .sidebar-logo {
-      width: 36px;
-      height: 36px;
-      background: #f0f0f5;
-      border: 1px solid #2a2a36;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .sidebar-logo span {
-      font-size: 16px;
-      font-weight: 700;
-      color: #111114;
-      letter-spacing: 1px;
-    }
-
-    .sidebar-top {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-
-    .sidebar-brand {
-      font-size: 30px;
-      font-weight: 600;
-      color: #f0f0f5;
-      letter-spacing: 1px;
-    }
-
-    .about-subtitle {
-      font-size: 14px;
-      color: #555566;
-      margin-top: 6px;
-      margin-bottom: 32px;
-      font-weight: 300;
-      letter-spacing: 1px;
-    }
-
-    .about-body {
-      max-width: 600px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .about-body p {
-      font-size: 17px;
-      color: #888899;
-      line-height: 1.8;
-      font-weight: 300;
-    }
-
-    .about-divider {
-      width: 100%;
-      height: 1px;
-      background: #1e1e24;
-    }
-
-    .about-includes {
-      font-size: 12px;
-      color: #555566;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .about-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .about-list li {
-      font-size: 17px;
-      color: #888899;
-      padding-left: 12px;
-      border-left: 2px solid #2a2a36;
-      font-weight: 300;
-    }
-
-    .about-conclusion {
-      font-size: 12px;
-      color: #444455;
-      line-height: 1.8;
-      font-style: italic;
-    }
-
-  </style>
+  <script src="About.js"></script>
 
 </head>
 <body>
@@ -107,7 +15,7 @@
   <!-- logo mark -->
   <div class="sidebar-top">
     <div class="sidebar-logo">
-    <span>FP</span>
+      <span>FP</span>
     </div>
     <span class="sidebar-brand">FitPulse</span>
   </div>
@@ -122,6 +30,7 @@
     <a href="AI-meals.html"><div class="nav-item"><i data-lucide="salad"></i>AI meals</div></a>
     <a href="Workouts.html"><div class="nav-item"><i data-lucide="dumbbell"></i>Workouts</div></a>
     <a href="About.html"><div class="nav-item active"><i data-lucide="info"></i>About</div></a>
+    <input type="checkbox" style="margin-top: -277px; margin-left: -1030px" class="theme-checkbox" id="theme-toggle">
   </nav>
 </aside>
 <!-- Main content -->

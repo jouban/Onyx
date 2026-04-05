@@ -33,8 +33,18 @@ function logWorkout() {
         return;
     }
 
-    // calculate volume — sets x reps x weight
-    const volume = sets * reps * weight;
+    // Determine exercise type (strength vs cardio)
+    // If weight is provided, it's a strength exercise; otherwise it's cardio
+    const isStrength = weight > 0;
+
+    // calculate volume — sets x reps x weight for strength, duration for cardio
+    let volume = 0;
+    if (isStrength) {
+        volume = sets * reps * weight;
+    } else {
+        // For cardio, use duration as the volume metric
+        volume = duration > 0 ? duration : calories;
+    }
 
     // create workout object
     const workout = {
@@ -45,6 +55,7 @@ function logWorkout() {
         duration: duration,
         calories: calories,
         volume: volume,
+        type: isStrength ? 'strength' : 'cardio',
         time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
     };
 
@@ -95,17 +106,28 @@ function renderHistory() {
 
     // loop through history and build HTML (limit to last 20 shown)
     const recentWorkouts = workoutHistory.slice(0, 20);
-    list.innerHTML = recentWorkouts.map(w => `
+    list.innerHTML = recentWorkouts.map(w => {
+        // Format details based on exercise type
+        let details = '';
+        if (w.type === 'strength') {
+            details = `${w.sets} sets × ${w.reps} reps × ${w.weight}kg`;
+        } else {
+            // Cardio format
+            details = `${w.duration} min cardio`;
+        }
+
+        return `
         <div class="history-item">
             <span class="history-item-name">${escapeHtml(w.name)}</span>
             <span class="history-item-details">
-                ${w.sets} sets × ${w.reps} reps × ${w.weight}kg
-                ${w.duration ? '· ' + w.duration + ' min' : ''}
+                ${details}
+                ${w.duration && w.type === 'strength' ? '· ' + w.duration + ' min' : ''}
                 ${w.calories ? '· ' + w.calories + ' kcal' : ''}
                 · ${w.time}
             </span>
         </div>
-    `).join('');
+    `;
+    }).join('');
 }
 
 // Helper function to prevent XSS
